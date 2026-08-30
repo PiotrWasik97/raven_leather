@@ -7,10 +7,10 @@ import kostka from '../assets/kostki-gitarowe-1.jpg';
 
 const categories = [
     { id: 1, img: bikerWalletProfil, title: "Portfele", keyName: "Portfele", span: "md:col-span-2 md:row-span-2" },
-    { id: 3, img: pasek, title: "Paski", keyName: "Paski do spodni", span: "md:col-span-1 md:row-span-1" },
-    { id: 2, img: torebka, title: "Torebki", keyName: "Torebki", span: "md:col-span-1 md:row-span-1" },
-    { id: 4, img: cardholder, title: "Cardholders", keyName: "Etui", span: "md:col-span-1 md:row-span-1" },
-    { id: 6, img: kostka, title: "Akcesoria", keyName: "Akcesoria", span: "md:col-span-1 md:row-span-1" },
+    // { id: 3, img: pasek, title: "Paski", keyName: "Paski do spodni", span: "md:col-span-1 md:row-span-1" },
+    // { id: 2, img: torebka, title: "Torebki", keyName: "Torebki", span: "md:col-span-1 md:row-span-1" },
+    { id: 4, img: cardholder, title: "Cardholders", keyName: "Etui", span: "md:col-span-2 md:row-span-2" },
+    // { id: 6, img: kostka, title: "Akcesoria", keyName: "Akcesoria", span: "md:col-span-1 md:row-span-1" },
 ];
 
 export default function Galeria({ onCategoryClick }) {

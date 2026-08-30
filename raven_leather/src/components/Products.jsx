@@ -191,6 +191,7 @@ export default function Products({ initialCategory }) {
         images: [passport, passport1, passport2, passport3, passport4, passportProfil],
       },
     ],
+    /*
     Torebki: [
       {
         title: "Kolekcja Podstawowa",
@@ -205,6 +206,7 @@ export default function Products({ initialCategory }) {
       { title: "Breloki", images: [brelok1, brelok2, brelok3] },
       { title: "Pasy Gitarowe", images: [pasy1, pasy2, pasy3, pasy4] },
     ],
+    */
   };
 
   const categories = Object.keys(productsData);

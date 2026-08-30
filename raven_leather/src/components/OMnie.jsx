@@ -1,5 +1,5 @@
 import React from "react";
-import workshopPhoto from "../assets/marcin-photo.jpg";
+import workshopPhoto from "../assets/Marcin.jpg";
 
 export default function OMnie() {
   return (
@@ -8,7 +8,7 @@ export default function OMnie() {
         <img
           src={workshopPhoto}
           alt="Marcin w pracowni"
-          className="w-full h-full object-cover opacity-60 md:opacity-90 transition-opacity duration-300 grayscale-[20%]"
+          className="w-full h-full object-cover object-top opacity-60 md:opacity-90 transition-opacity duration-300 grayscale-[20%]"
         />
 
         <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-stone-950/20 to-stone-950/20 md:bg-gradient-to-r md:from-stone-900/10 md:to-transparent md:via-transparent"></div>
