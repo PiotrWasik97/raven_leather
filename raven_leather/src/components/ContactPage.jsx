@@ -22,7 +22,7 @@ export default function ContactPage() {
 
     try {
       const response = await fetch(
-        "https://formsubmit.co/ajax/wasikmarcin89@gmail.com",
+        "https://formsubmit.co/ajax/raven.leather.art@gmail.com",
         {
           method: "POST",
           headers: {
@@ -96,10 +96,10 @@ export default function ContactPage() {
               Email
             </span>
             <a
-              href="mailto:kontakt@ravenleather.pl"
+              href="mailto:raven.leather.art@gmail.com"
               className="text-stone-800 font-serif text-lg hover:text-stone-600 transition-colors"
             >
-              kontakt@ravenleather.pl
+              raven.leather.art@gmail.com
             </a>
           </div>
         </div>

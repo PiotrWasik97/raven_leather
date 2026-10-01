@@ -77,7 +77,7 @@ export default function OMnie() {
               Twojej własnej historii.
             </p>
 
-            <div
+            {/* <div
               className="border-l-2 border-stone-300 md:border-stone-400 pl-6 py-2 my-8 
                               bg-white/10 md:bg-white 
                               italic 
@@ -86,7 +86,7 @@ export default function OMnie() {
             >
               Dziękuję, że doceniasz autentyczną pracę ludzkich rąk. <br />
               "Marcin"
-            </div>
+            </div> */}
 
             {/* <p>
               Moja pracownia znajduje się w{" "}
