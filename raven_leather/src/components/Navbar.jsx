@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import logoNav from '../assets/Raven_logo.png';
 
 const MenuIcon = () => (
@@ -13,55 +14,52 @@ const CloseIcon = () => (
   </svg>
 );
 
-export default function Navbar({ onNavigate }) {
+export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const handleLinkClick = (action) => {
-    action();
-    setIsMobileMenuOpen(false);
-  };
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
     <>
       <nav className="sticky top-0 left-0 w-full bg-white/95 backdrop-blur-sm z-50 border-b border-stone-100 h-24 shadow-sm transition-all duration-300">
         <div className="container mx-auto px-6 md:px-12 h-full flex items-center justify-between max-w-screen-xl">
-          
-          <div 
-            onClick={() => onNavigate('home')} 
+
+          <Link
+            to="/"
             className="flex items-center gap-3 cursor-pointer group flex-shrink-0"
           >
-            <img 
-              src={logoNav} 
-              alt="Raven Leather" 
-              className="h-12 w-auto transition-transform duration-300 group-hover:scale-105" 
+            <img
+              src={logoNav}
+              alt="Raven Leather"
+              className="h-12 w-auto transition-transform duration-300 group-hover:scale-105"
             />
-          </div>
+          </Link>
 
           <div className="hidden xl:flex items-center gap-12">
-            <button 
-              onClick={() => onNavigate('home')} 
+            <Link
+              to="/"
               className="text-stone-600 hover:text-stone-900 text-xs font-bold uppercase tracking-[0.2em] transition-colors cursor-pointer"
             >
               Start
-            </button>
-            <button 
-              onClick={() => onNavigate('products')} 
+            </Link>
+            <Link
+              to="/kolekcja"
               className="text-stone-600 hover:text-stone-900 text-xs font-bold uppercase tracking-[0.2em] transition-colors cursor-pointer"
             >
               Kolekcja
-            </button>
-            <button 
-              onClick={() => onNavigate('about')} 
+            </Link>
+            <Link
+              to="/o-mnie"
               className="text-stone-600 hover:text-stone-900 text-xs font-bold uppercase tracking-[0.2em] transition-colors cursor-pointer"
             >
               O Mnie
-            </button>
-            <button 
-              onClick={() => onNavigate('contact')} 
+            </Link>
+            <Link
+              to="/kontakt"
               className="px-6 py-3 bg-stone-900 text-white text-xs font-bold uppercase tracking-[0.2em] hover:bg-stone-700 transition-colors cursor-pointer rounded-sm shadow-md"
             >
               Kontakt
-            </button>
+            </Link>
           </div>
 
           <div className="xl:hidden flex items-center">
@@ -102,30 +100,34 @@ export default function Navbar({ onNavigate }) {
             </div>
 
             <div className="flex flex-col gap-6 justify-center align-center">
-                <button 
-                    onClick={() => handleLinkClick(() => onNavigate('home'))}
+                <Link
+                    to="/"
+                    onClick={closeMobileMenu}
                     className="text-2xl font-serif text-stone-900 hover:text-stone-600 text-left transition-colors"
                 >
                     Start
-                </button>
-                <button 
-                    onClick={() => handleLinkClick(() => onNavigate('products'))}
+                </Link>
+                <Link
+                    to="/kolekcja"
+                    onClick={closeMobileMenu}
                     className="text-2xl font-serif text-stone-900 hover:text-stone-600 text-left transition-colors"
                 >
                     Kolekcja
-                </button>
-                <button 
-                    onClick={() => handleLinkClick(() => onNavigate('about'))}
+                </Link>
+                <Link
+                    to="/o-mnie"
+                    onClick={closeMobileMenu}
                     className="text-2xl font-serif text-stone-900 hover:text-stone-600 text-left transition-colors"
                 >
                     O Mnie
-                </button>
-                <button 
-                    onClick={() => handleLinkClick(() => onNavigate('contact'))}
+                </Link>
+                <Link
+                    to="/kontakt"
+                    onClick={closeMobileMenu}
                     className="text-2xl font-serif text-stone-900 hover:text-stone-600 text-left transition-colors"
                 >
                     Kontakt
-                </button>
+                </Link>
             </div>
 
             <div className="mt-auto pt-8 border-t border-stone-200">

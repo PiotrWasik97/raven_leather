@@ -198,7 +198,7 @@ export default function ContactPage() {
                 onChange={handleChange}
                 required
                 className="w-full bg-stone-50 border border-stone-200 p-3 md:p-4 text-stone-800 focus:outline-none focus:border-stone-500 focus:ring-1 focus:ring-stone-500 transition-all rounded-sm resize-none"
-                placeholder="W czym możemy pomóc?"
+                placeholder="W czym mogę pomóc?"
               ></textarea>
             </div>
 

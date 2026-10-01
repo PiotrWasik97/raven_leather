@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { categoryToSlug, slugToCategory } from "../utils/categorySlugs.js";
+import useSEO from "../hooks/useSEO.js";
 
 import biker1 from "../assets/biker-1.jpg";
 import biker2 from "../assets/biker-2.jpg";
@@ -117,24 +120,11 @@ const ChevronRight = () => (
   </svg>
 );
 
-export default function Products({ initialCategory }) {
-  const [activeCategory, setActiveCategory] = useState(
-    initialCategory || "Portfele",
-  );
+export default function Products() {
+  const { kategoria } = useParams();
+  const navigate = useNavigate();
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const scrollContainerRef = useRef(null);
-
-  useEffect(() => {
-    if (initialCategory) {
-      setActiveCategory(initialCategory);
-    }
-  }, [initialCategory]);
-
-  useEffect(() => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTo({ top: 0, behavior: "auto" });
-    }
-  }, [activeCategory]);
 
   const productsData = {
     Portfele: [
@@ -211,6 +201,31 @@ export default function Products({ initialCategory }) {
 
   const categories = Object.keys(productsData);
 
+  const requestedCategory = kategoria ? slugToCategory(kategoria) : null;
+  const activeCategory =
+    requestedCategory && categories.includes(requestedCategory)
+      ? requestedCategory
+      : categories[0];
+
+  useEffect(() => {
+    const correctSlug = categoryToSlug(activeCategory);
+    if (kategoria !== correctSlug) {
+      navigate(`/kolekcja/${correctSlug}`, { replace: true });
+    }
+  }, [kategoria, activeCategory, navigate]);
+
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({ top: 0, behavior: "auto" });
+    }
+  }, [activeCategory]);
+
+  useSEO({
+    title: activeCategory,
+    description: `${activeCategory} – ręcznie robiona galanteria skórzana z naturalnej skóry najwyższej klasy. Zobacz kolekcję Raven Leather.`,
+    path: `/kolekcja/${categoryToSlug(activeCategory)}`,
+  });
+
   const allImagesInCategory = productsData[activeCategory]
     ? productsData[activeCategory].flatMap((section) => section.images)
     : [];
@@ -276,7 +291,7 @@ export default function Products({ initialCategory }) {
           {categories.map((category) => (
             <button
               key={category}
-              onClick={() => setActiveCategory(category)}
+              onClick={() => navigate(`/kolekcja/${categoryToSlug(category)}`)}
               className={`whitespace-nowrap px-5 py-2 rounded-sm text-xs font-bold uppercase tracking-wider transition-all ${
                 activeCategory === category
                   ? "bg-stone-900 text-white"
@@ -298,7 +313,7 @@ export default function Products({ initialCategory }) {
             {categories.map((category) => (
               <button
                 key={category}
-                onClick={() => setActiveCategory(category)}
+                onClick={() => navigate(`/kolekcja/${categoryToSlug(category)}`)}
                 className={`text-left text-base py-3 px-4 transition-all duration-300 border-l-2 ${
                   activeCategory === category
                     ? "border-stone-900 text-stone-900 font-bold bg-white shadow-sm pl-6"

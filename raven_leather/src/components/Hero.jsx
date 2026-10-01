@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import logo from "../assets/Raven_logo.png";
 import frontphoto1 from "../assets/BikerWallet - profil.jpg";
 import frontphoto2 from "../assets/Bifold - profil.jpg";
@@ -6,13 +7,13 @@ import frontphoto3 from "../assets/Card Holder 1 - profil.jpg";
 import frontphoto4 from "../assets/Card Holder minimalist - profil.jpg";
 import frontphoto5 from "../assets/Passport - profil.jpg";
 
-export default function Hero({ onNavigate }) {
+export default function Hero() {
   const images = [
-    frontphoto1,
-    frontphoto2,
-    frontphoto3,
-    frontphoto4,
-    frontphoto5,
+    { src: frontphoto1, alt: "Ręcznie robiony portfel Biker Wallet – Raven Leather" },
+    { src: frontphoto2, alt: "Ręcznie robiony portfel Bifold – Raven Leather" },
+    { src: frontphoto3, alt: "Skórzane etui na karty Card Holder – Raven Leather" },
+    { src: frontphoto4, alt: "Minimalistyczne etui na karty – Raven Leather" },
+    { src: frontphoto5, alt: "Skórzane etui na paszport – Raven Leather" },
   ];
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -51,19 +52,19 @@ export default function Hero({ onNavigate }) {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-          <button
-            onClick={() => onNavigate("products")}
-            className="px-8 py-3 bg-stone-900 text-white text-xs font-bold uppercase tracking-[0.2em] hover:bg-stone-700 transition-colors duration-300 cursor-pointer shadow-lg hover:shadow-xl rounded-sm"
+          <Link
+            to="/kolekcja"
+            className="px-8 py-3 bg-stone-900 text-white text-xs font-bold uppercase tracking-[0.2em] hover:bg-stone-700 transition-colors duration-300 cursor-pointer shadow-lg hover:shadow-xl rounded-sm text-center"
           >
             Zobacz Kolekcję
-          </button>
+          </Link>
 
-          <button
-            onClick={() => onNavigate("about")}
-            className="px-8 py-3 border border-stone-300 text-stone-800 text-xs font-bold uppercase tracking-[0.2em] hover:border-stone-900 hover:bg-stone-50 transition-all duration-300 cursor-pointer rounded-sm"
+          <Link
+            to="/o-mnie"
+            className="px-8 py-3 border border-stone-300 text-stone-800 text-xs font-bold uppercase tracking-[0.2em] hover:border-stone-900 hover:bg-stone-50 transition-all duration-300 cursor-pointer rounded-sm text-center"
           >
             Poznaj Markę
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -77,8 +78,8 @@ export default function Hero({ onNavigate }) {
               }`}
             >
               <img
-                src={photo}
-                alt={`Slide ${index}`}
+                src={photo.src}
+                alt={photo.alt}
                 className="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700"
               />
             </div>

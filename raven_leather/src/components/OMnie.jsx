@@ -42,7 +42,7 @@ export default function OMnie() {
               naturalnej skóry, cisza i skupienie, które towarzyszą mi przy
               każdym uderzeniu wybijaka czy prowadzeniu igieł. Od pierwszego
               szkicu, przez ręczne wycinanie, aż po finalne polerowanie
-              krawędzi. Każdy etap produkt pokonuje wyłącznie w moich dłoniach.
+              krawędzi. Każdy etap produkt wykonuję wyłącznie w moich dłoniach.
             </p>
             <h2 className="text-[28px] md:text-[32px] xl:text-[42px] font-serif font-bold text-stone-50 md:text-stone-900 mb-5 leading-tight drop-shadow-md md:drop-shadow-none">
               Dlaczego skóra?
@@ -53,7 +53,7 @@ export default function OMnie() {
               fakturę, zapach, a nawet drobne naturalne ślady, które czynią
               każdy jej płat unikalnym. Nie interesują mnie tanie zamienniki ani
               skóra ekologiczna, która po kilku miesiącach pęka i ląduje w
-              koszu. Wybieram tylko selekcjonowane skóry naturalne najwyższej
+              koszu. Wybieram tylko wyselekcjonowane skóry naturalne najwyższej
               klasy. Chcę, abyś biorąc do ręki mój produkt - czy to luksusową
               torebkę, czy codzienny brelok do kluczy - od razu poczuł tę
               niesamowitą, zmysłową mięsistość i autentyczność.

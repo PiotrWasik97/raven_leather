@@ -1,9 +1,11 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import bikerWalletProfil from '../assets/BikerWallet - profil.jpg';
 import cardholder from '../assets/Card Holder 1 - profil.jpg';
 import pasek from '../assets/paski-spodnie-1.jpg';
 import torebka from '../assets/torebka-1.jpg';
 import kostka from '../assets/kostki-gitarowe-1.jpg';
+import { categoryToSlug } from '../utils/categorySlugs.js';
 
 const categories = [
     { id: 1, img: bikerWalletProfil, title: "Portfele", keyName: "Portfele", span: "md:col-span-2 md:row-span-2" },
@@ -13,7 +15,7 @@ const categories = [
     // { id: 6, img: kostka, title: "Akcesoria", keyName: "Akcesoria", span: "md:col-span-1 md:row-span-1" },
 ];
 
-export default function Galeria({ onCategoryClick }) {
+export default function Galeria() {
     return (
         <section className="py-20 bg-stone-50">
             <div className="container mx-auto px-4 md:px-8 lg:px-20 max-w-screen-xl">
@@ -25,10 +27,10 @@ export default function Galeria({ onCategoryClick }) {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[280px] lg:auto-rows-[200px] grid-flow-dense">
                     
                     {categories.map((item) => (
-                        <div 
-                            key={item.id} 
-                            onClick={() => onCategoryClick(item.keyName)}
-                            className={`relative group overflow-hidden rounded-sm cursor-pointer ${item.span}`}
+                        <Link
+                            key={item.id}
+                            to={`/kolekcja/${categoryToSlug(item.keyName)}`}
+                            className={`relative group overflow-hidden rounded-sm cursor-pointer block ${item.span}`}
                         >
                             <img
                                 src={item.img}
@@ -56,7 +58,7 @@ export default function Galeria({ onCategoryClick }) {
                                 </div>
 
                             </div>
-                        </div>
+                        </Link>
                     ))}
 
                 </div>
