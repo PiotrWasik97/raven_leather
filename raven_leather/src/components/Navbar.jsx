@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import logoNav from '../assets/Raven_logo.png';
+import logoNav from '../assets/logo/raven-leather-poziome.svg';
 
 const MenuIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { IconWhatsApp, IconMessenger } from "./ContactIcons.jsx";
-import { WHATSAPP_URL, MESSENGER_URL } from "../utils/contactLinks.js";
+import { IconWhatsApp /*, IconMessenger */ } from "./ContactIcons.jsx";
+import { WHATSAPP_URL /*, MESSENGER_URL */ } from "../utils/contactLinks.js";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -96,6 +96,7 @@ export default function ContactPage() {
             </a>
           </div>
 
+          {/* Messenger wyłączony - patrz komentarz w Kontakt.jsx
           <div className="flex flex-col">
             <span className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-1">
               Messenger
@@ -110,6 +111,7 @@ export default function ContactPage() {
               Napisz do mnie na Messenger
             </a>
           </div>
+          */}
 
           <div className="flex flex-col">
             <span className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-1">

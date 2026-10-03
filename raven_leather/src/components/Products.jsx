@@ -4,74 +4,7 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { categoryToSlug, slugToCategory } from "../utils/categorySlugs.js";
 import useSEO from "../hooks/useSEO.js";
 
-import bikerWalletProfil from "../assets/BikerWallet - profil.jpg";
-import biker1 from "../assets/biker-1.jpg";
-import biker2 from "../assets/biker-2.jpg";
-import biker3 from "../assets/biker-3.jpg";
-import biker4 from "../assets/biker-4.jpg";
-import biker5 from "../assets/biker-5.jpg";
-import biker6 from "../assets/biker-6.jpg";
-import biker7 from "../assets/biker-7.jpg";
-
-import bifold from "../assets/Bifold.jpg";
-import bifold1 from "../assets/Bifold(1).jpg";
-import bifold2 from "../assets/Bifold(2).jpg";
-import bifold3 from "../assets/Bifold(3).jpg";
-import bifold4 from "../assets/Bifold(4).jpg";
-import bifold5 from "../assets/Bifold(5).jpg";
-import bifold6 from "../assets/Bifold(6).jpg";
-import bifold7 from "../assets/Bifold(7).jpg";
-import bifold8 from "../assets/Bifold(8).jpg";
-import bifold9 from "../assets/Bifold(9).jpg";
-import bifoldProfil from "../assets/Bifold - profil.jpg";
-
-import brelok1 from "../assets/brelok-1.jpg";
-import brelok2 from "../assets/brelok-2.jpg";
-import brelok3 from "../assets/brelok-3.jpg";
-
-import cardholder1 from "../assets/Card Holder 1.jpg";
-import cardholder1_1 from "../assets/Card Holder 1(1).jpg";
-import cardholder1_2 from "../assets/Card Holder 1(2).jpg";
-import cardholder1_3 from "../assets/Card Holder 1(3).jpg";
-import cardholder1_4 from "../assets/Card Holder 1(4).jpg";
-import cardholder1_5 from "../assets/Card Holder 1(5).jpg";
-import cardholder1_6 from "../assets/Card Holder 1(6).jpg";
-import cardholder1_7 from "../assets/Card Holder 1(7).jpg";
-import cardholder1_8 from "../assets/Card Holder 1(8).jpg";
-import cardholder1Profil from "../assets/Card Holder 1 - profil.jpg";
-
-import cardholderMinimalist from "../assets/Card Holder minimalist.jpg";
-import cardholderMinimalist1 from "../assets/Card Holder minimalist(1).jpg";
-import cardholderMinimalist2 from "../assets/Card Holder minimalist(2).jpg";
-import cardholderMinimalist3 from "../assets/Card Holder minimalist(3).jpg";
-import cardholderMinimalist4 from "../assets/Card Holder minimalist(4).jpg";
-import cardholderMinimalistProfil from "../assets/Card Holder minimalist - profil.jpg";
-
-import passport from "../assets/Passport.jpg";
-import passport1 from "../assets/Passport(1).jpg";
-import passport2 from "../assets/Passport(2).jpg";
-import passport3 from "../assets/Passport(3).jpg";
-import passport4 from "../assets/Passport(4).jpg";
-import passportProfil from "../assets/Passport - profil.jpg";
-
-import akcesoria1 from "../assets/kostki-gitarowe-1.jpg";
-import akcesoria2 from "../assets/kostki-gitarowe-2.jpg";
-
-import paski1 from "../assets/paski-spodnie-1.jpg";
-import paski2 from "../assets/paski-spodnie-2.jpg";
-import paski3 from "../assets/paski-spodnie-3.jpg";
-import paski4 from "../assets/paski-spodnie-4.jpg";
-
-import pasy1 from "../assets/pasy-gitarowe-1.jpg";
-import pasy2 from "../assets/pasy-gitarowe-2.jpg";
-import pasy3 from "../assets/pasy-gitarowe-3.jpg";
-import pasy4 from "../assets/pasy-gitarowe-4.jpg";
-
-import torebka1 from "../assets/torebka-1.jpg";
-import torebka2 from "../assets/torebka-2.jpg";
-import torebka3 from "../assets/torebka-3.jpg";
-import torebka4 from "../assets/torebka-4.jpg";
-import torebka5 from "../assets/torebka-5.jpg";
+import { PRODUCTS_BY_CATEGORY } from "../data/catalog.js";
 
 const CloseIcon = () => (
   <svg
@@ -122,94 +55,48 @@ const ChevronRight = () => (
   </svg>
 );
 
+// Shows the 1600px version straight away and swaps in the sharper 2560px one
+// (for zooming into details) once it has downloaded. Both render at the same
+// on-screen size, so the swap is invisible apart from the added sharpness.
+function LightboxImage({ photo, alt, onLoad }) {
+  const [largeReady, setLargeReady] = useState(false);
+
+  useEffect(() => {
+    const preload = new Image();
+    preload.onload = () => setLargeReady(true);
+    preload.src = photo.large;
+    return () => {
+      preload.onload = null;
+    };
+  }, [photo.large]);
+
+  return (
+    <img
+      src={largeReady ? photo.large : photo.medium}
+      alt={alt}
+      onLoad={(e) => onLoad(e.currentTarget)}
+      draggable={false}
+      className="max-h-full max-w-full object-contain shadow-2xl animate-fadeIn select-none"
+    />
+  );
+}
+
 export default function Products() {
   const { kategoria } = useParams();
   const navigate = useNavigate();
-  // { images, index } of the product currently open in the lightbox, or null
+  // { photos, index } of the product currently open in the lightbox, or null
   const [lightbox, setLightbox] = useState(null);
+  // Bottom edge (px from the top of the screen) of the un-zoomed photo in the
+  // lightbox - the "1 / 8" counter sits just below it.
+  const [photoBottom, setPhotoBottom] = useState(null);
+  const lightboxImgRef = useRef(null);
+  const zoomScaleRef = useRef(1);
   const scrollContainerRef = useRef(null);
+  const categoryBarRef = useRef(null);
+  const categoryBarPositionedRef = useRef(false);
   const pointerDownRef = useRef(null);
 
-  // `cover` is the flagship photo shown full-width above the grid on mobile.
-  // Sections without one fall back to their first image.
-  const productsData = {
-    Portfele: [
-      {
-        title: "Biker",
-        cover: bikerWalletProfil,
-        images: [biker1, biker2, biker3, biker4, biker5, biker6, biker7],
-      },
-      {
-        title: "Bifold",
-        cover: bifoldProfil,
-        images: [
-          bifold,
-          bifold1,
-          bifold2,
-          bifold3,
-          bifold4,
-          bifold5,
-          bifold6,
-          bifold7,
-          bifold8,
-          bifold9,
-          bifoldProfil,
-        ],
-      },
-    ],
-    Etui: [
-      {
-        title: "Cardholders",
-        cover: cardholder1Profil,
-        images: [
-          cardholder1,
-          cardholder1_1,
-          cardholder1_2,
-          cardholder1_3,
-          cardholder1_4,
-          cardholder1_5,
-          cardholder1_6,
-          cardholder1_7,
-          cardholder1_8,
-          cardholder1Profil,
-        ],
-      },
-      {
-        title: "Card Holders Minimalist",
-        cover: cardholderMinimalistProfil,
-        images: [
-          cardholderMinimalist,
-          cardholderMinimalist1,
-          cardholderMinimalist2,
-          cardholderMinimalist3,
-          cardholderMinimalist4,
-          cardholderMinimalistProfil,
-        ],
-      },
-      {
-        title: "Passport",
-        cover: passportProfil,
-        images: [passport, passport1, passport2, passport3, passport4, passportProfil],
-      },
-    ],
-    /*
-    Torebki: [
-      {
-        title: "Kolekcja Podstawowa",
-        images: [torebka1, torebka2, torebka3, torebka4, torebka5],
-      },
-    ],
-    "Paski do spodni": [
-      { title: "Paski do spodni", images: [paski1, paski2, paski3, paski4] },
-    ],
-    Akcesoria: [
-      { title: "Kostki Gitarowe", images: [akcesoria1, akcesoria2] },
-      { title: "Breloki", images: [brelok1, brelok2, brelok3] },
-      { title: "Pasy Gitarowe", images: [pasy1, pasy2, pasy3, pasy4] },
-    ],
-    */
-  };
-
+  const productsData = PRODUCTS_BY_CATEGORY;
   const categories = Object.keys(productsData);
 
   const requestedCategory = kategoria ? slugToCategory(kategoria) : null;
@@ -231,43 +118,66 @@ export default function Products() {
     }
   }, [activeCategory]);
 
+  // Mobile: the category chips don't all fit on screen - keep the active one
+  // centered in the horizontally scrolling bar so it's never cut off.
+  useEffect(() => {
+    const bar = categoryBarRef.current;
+    const chip = bar?.querySelector('[aria-current="page"]');
+    if (!bar || !chip) return;
+    const barRect = bar.getBoundingClientRect();
+    const chipRect = chip.getBoundingClientRect();
+    bar.scrollBy({
+      left:
+        chipRect.left + chipRect.width / 2 - (barRect.left + barRect.width / 2),
+      // jump straight there on page load, glide when the visitor switches
+      behavior: categoryBarPositionedRef.current ? "smooth" : "instant",
+    });
+    categoryBarPositionedRef.current = true;
+  }, [activeCategory]);
+
   useSEO({
     title: activeCategory,
     description: `${activeCategory} – ręcznie robiona galanteria skórzana z naturalnej skóry najwyższej klasy. Zobacz kolekcję Raven Leather.`,
     path: `/kolekcja/${categoryToSlug(activeCategory)}`,
   });
 
-  const getCover = (section) => section.cover ?? section.images[0];
-
-  // The lightbox walks through one product only, in the same order the
-  // visitor sees it: on mobile the flagship photo comes first, on desktop
-  // the grid order is kept as is.
-  const openLightbox = (section, imgSrc) => {
-    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
-    const cover = getCover(section);
-    const images = isDesktop
-      ? section.images
-      : [cover, ...section.images.filter((img) => img !== cover)];
-    const index = images.indexOf(imgSrc);
+  // The lightbox walks through one product only. Photo no. 1 (the flagship)
+  // comes first both on mobile (above the grid) and on desktop (first tile).
+  const openLightbox = (section, photo) => {
+    const index = section.photos.indexOf(photo);
     if (index !== -1) {
-      setLightbox({ images, index });
+      zoomScaleRef.current = 1;
+      setLightbox({ photos: section.photos, index });
     }
   };
 
-  const closeLightbox = () => setLightbox(null);
+  const closeLightbox = () => {
+    setLightbox(null);
+    setPhotoBottom(null);
+  };
 
+  // Every photo opens un-zoomed (TransformWrapper is keyed by index).
   const nextImage = useCallback(() => {
+    zoomScaleRef.current = 1;
     setLightbox((prev) => ({
       ...prev,
-      index: (prev.index + 1) % prev.images.length,
+      index: (prev.index + 1) % prev.photos.length,
     }));
   }, []);
 
   const prevImage = useCallback(() => {
+    zoomScaleRef.current = 1;
     setLightbox((prev) => ({
       ...prev,
-      index: (prev.index - 1 + prev.images.length) % prev.images.length,
+      index: (prev.index - 1 + prev.photos.length) % prev.photos.length,
     }));
+  }, []);
+
+  // Only measured while un-zoomed: a zoomed photo's box isn't its resting size.
+  const measurePhoto = useCallback((img) => {
+    lightboxImgRef.current = img;
+    if (zoomScaleRef.current > 1.01) return;
+    setPhotoBottom(img.getBoundingClientRect().bottom);
   }, []);
 
   const isLightboxOpen = lightbox !== null;
@@ -281,14 +191,21 @@ export default function Products() {
       if (e.key === "ArrowLeft") prevImage();
     };
 
+    // e.g. rotating the phone moves the photo, so the counter follows it
+    const handleResize = () => {
+      if (lightboxImgRef.current) measurePhoto(lightboxImgRef.current);
+    };
+
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("resize", handleResize);
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("resize", handleResize);
     };
-  }, [isLightboxOpen, nextImage, prevImage]);
+  }, [isLightboxOpen, nextImage, prevImage, measurePhoto]);
 
   // A click on the dark area around the photo closes the lightbox, but not
   // when it ends a drag (panning a zoomed photo).
@@ -332,10 +249,14 @@ export default function Products() {
     // dvh follows the mobile browser's collapsing address bar; vh is the fallback.
     <section className="w-full bg-stone-50 h-[calc(100vh-6rem)] supports-[height:100dvh]:h-[calc(100dvh-6rem)] flex flex-col md:flex-row overflow-hidden relative">
       <div className="md:hidden w-full bg-white border-b border-stone-200 flex-shrink-0 z-20">
-        <div className="flex overflow-x-auto py-4 px-4 gap-3 no-scrollbar">
+        <div
+          ref={categoryBarRef}
+          className="flex overflow-x-auto py-4 px-4 gap-3 no-scrollbar"
+        >
           {categories.map((category) => (
             <button
               key={category}
+              aria-current={activeCategory === category ? "page" : undefined}
               onClick={() => navigate(`/kolekcja/${categoryToSlug(category)}`)}
               className={`whitespace-nowrap px-5 py-2 rounded-sm text-xs font-bold uppercase tracking-wider transition-all ${
                 activeCategory === category
@@ -388,7 +309,7 @@ export default function Products() {
         {productsData[activeCategory] &&
         productsData[activeCategory].length > 0 ? (
           productsData[activeCategory].map((section, sectionIndex) => {
-            const cover = getCover(section);
+            const cover = section.photos[0];
 
             return (
             <div key={sectionIndex} className="mb-0 md:mb-16 last:mb-0">
@@ -407,7 +328,9 @@ export default function Products() {
                   className="aspect-[4/3] w-full overflow-hidden bg-stone-100 cursor-pointer"
                 >
                   <img
-                    src={cover}
+                    src={cover.medium}
+                    srcSet={`${cover.thumb} 800w, ${cover.medium} 1600w`}
+                    sizes="100vw"
                     alt={`${activeCategory} ${section.title} – zdjęcie główne`}
                     loading={sectionIndex === 0 ? "eager" : "lazy"}
                     className="w-full h-full object-cover"
@@ -416,17 +339,17 @@ export default function Products() {
               </div>
 
               <div className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 md:gap-6 px-2">
-                {section.images.map((img, imgIndex) => (
+                {section.photos.map((photo, photoIndex) => (
                   <div
-                    key={imgIndex}
-                    onClick={() => openLightbox(section, img)}
+                    key={photoIndex}
+                    onClick={() => openLightbox(section, photo)}
                     className={`group relative aspect-square overflow-hidden bg-stone-100 md:rounded-sm cursor-pointer shadow-none md:shadow-sm md:hover:shadow-md transition-all duration-300 ${
-                      img === cover ? "hidden md:block" : ""
+                      photo === cover ? "hidden md:block" : ""
                     }`}
                   >
                     <img
-                      src={img}
-                      alt={`${activeCategory} ${section.title} ${imgIndex + 1}`}
+                      src={photo.thumb}
+                      alt={`${activeCategory} ${section.title} ${photoIndex + 1}`}
                       loading="lazy"
                       className="w-full h-full object-cover transition-transform duration-700 md:group-hover:scale-105"
                     />
@@ -457,21 +380,24 @@ export default function Products() {
             wheel={{ step: 0.005 }}
             doubleClick={{ mode: "toggle" }}
             panning={{ velocityDisabled: true }}
+            onTransform={(_, state) => {
+              zoomScaleRef.current = state.scale;
+            }}
           >
             <TransformComponent
               wrapperStyle={{ width: "100%", height: "100%" }}
               contentStyle={{ width: "100%", height: "100%" }}
             >
               <div
-                className="w-full h-full p-4 md:p-12 flex items-center justify-center"
+                // extra bottom padding leaves room for the counter under the photo
+                className="w-full h-full p-4 pb-16 md:p-12 md:pb-20 flex items-center justify-center"
                 onPointerDown={handleBackdropPointerDown}
                 onClick={handleBackdropClick}
               >
-                <img
-                  src={lightbox.images[lightbox.index]}
+                <LightboxImage
+                  photo={lightbox.photos[lightbox.index]}
                   alt={`${activeCategory} – zdjęcie ${lightbox.index + 1}`}
-                  draggable={false}
-                  className="max-h-full max-w-full object-contain shadow-2xl animate-fadeIn select-none"
+                  onLoad={measurePhoto}
                 />
               </div>
             </TransformComponent>
@@ -501,17 +427,15 @@ export default function Products() {
             <ChevronRight />
           </button>
 
-          <div className="absolute bottom-4 left-0 right-0 flex flex-col items-center gap-1 pointer-events-none">
-            <span className="text-stone-500 text-xs tracking-[0.2em]">
-              {lightbox.index + 1} / {lightbox.images.length}
-            </span>
-            <span className="text-stone-600 text-[10px] tracking-[0.15em] uppercase">
-              <span className="md:hidden">Rozsuń dwa palce, aby przybliżyć</span>
-              <span className="hidden md:inline">
-                Kółko myszy lub dwuklik, aby przybliżyć
-              </span>
-            </span>
-          </div>
+          {photoBottom !== null && (
+            <div
+              // shadow keeps it legible when a zoomed-in photo slides under it
+              className="absolute left-0 right-0 mt-5 text-center text-stone-400 text-sm tracking-[0.2em] tabular-nums pointer-events-none [text-shadow:0_1px_3px_rgb(0_0_0/0.9)]"
+              style={{ top: photoBottom }}
+            >
+              {lightbox.index + 1} / {lightbox.photos.length}
+            </div>
+          )}
         </div>
       )}
     </section>

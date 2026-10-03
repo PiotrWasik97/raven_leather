@@ -1,19 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import bikerWalletProfil from '../assets/BikerWallet - profil.jpg';
-import cardholder from '../assets/Card Holder 1 - profil.jpg';
-import pasek from '../assets/paski-spodnie-1.jpg';
-import torebka from '../assets/torebka-1.jpg';
-import kostka from '../assets/kostki-gitarowe-1.jpg';
+import { coverOf } from '../data/catalog.js';
 import { categoryToSlug } from '../utils/categorySlugs.js';
 
+// 2x2: every tile spans 2 of the 4 columns and 2 rows
 const categories = [
-    { id: 1, img: bikerWalletProfil, title: "Portfele", keyName: "Portfele", span: "md:col-span-2 md:row-span-2" },
-    // { id: 3, img: pasek, title: "Paski", keyName: "Paski do spodni", span: "md:col-span-1 md:row-span-1" },
-    // { id: 2, img: torebka, title: "Torebki", keyName: "Torebki", span: "md:col-span-1 md:row-span-1" },
-    { id: 4, img: cardholder, title: "Cardholders", keyName: "Etui", span: "md:col-span-2 md:row-span-2" },
-    // { id: 6, img: kostka, title: "Akcesoria", keyName: "Akcesoria", span: "md:col-span-1 md:row-span-1" },
-];
+    { id: 1, photo: coverOf("bikerwallet"), title: "Portfele", keyName: "Portfele", span: "md:col-span-2 md:row-span-2" },
+    { id: 4, photo: coverOf("card-holder-1"), title: "Cardholders", keyName: "Etui", span: "md:col-span-2 md:row-span-2" },
+    { id: 3, photo: coverOf("pasek"), title: "Paski", keyName: "Paski do spodni", span: "md:col-span-2 md:row-span-2" },
+    { id: 2, photo: coverOf("torba-damska-model-1"), title: "Torebki", keyName: "Torebki", span: "md:col-span-2 md:row-span-2" },
+].filter((item) => item.photo);
 
 export default function Galeria() {
     return (
@@ -33,7 +29,9 @@ export default function Galeria() {
                             className={`relative group overflow-hidden rounded-sm cursor-pointer block ${item.span}`}
                         >
                             <img
-                                src={item.img}
+                                src={item.photo.medium}
+                                srcSet={`${item.photo.thumb} 800w, ${item.photo.medium} 1600w`}
+                                sizes="(min-width: 768px) 50vw, 100vw"
                                 alt={item.title}
                                 loading="lazy"
                                 className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 grayscale-[30%] group-hover:grayscale-0"

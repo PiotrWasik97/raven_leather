@@ -1,5 +1,6 @@
 import React from "react";
-import workshopPhoto from "../assets/Marcin.jpg";
+import workshopPhoto800 from "../assets/strona/marcin-800.jpg";
+import workshopPhoto1600 from "../assets/strona/marcin-1600.jpg";
 
 // "Rzemieślnik & Pasjonat / Nazywam się Marcin Wasik" - on mobile it sits on
 // the photo (light), on desktop above the text (dark).
@@ -40,7 +41,9 @@ export default function OMnie() {
           side margins instead, switch the img to object-contain. */}
       <div className="relative w-full aspect-[3/4] max-h-[calc(100svh-6rem)] overflow-hidden md:h-full md:w-auto md:max-h-none md:max-w-[50%] md:flex-shrink-0">
         <img
-          src={workshopPhoto}
+          src={workshopPhoto1600}
+          srcSet={`${workshopPhoto800} 800w, ${workshopPhoto1600} 1600w`}
+          sizes="(min-width: 768px) 50vw, 100vw"
           alt="Marcin Wasik w swojej pracowni skórzanej"
           className="absolute inset-0 w-full h-full object-cover object-top md:opacity-90 grayscale-[20%]"
         />

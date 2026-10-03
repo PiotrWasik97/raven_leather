@@ -3,7 +3,6 @@ export const CATEGORY_SLUGS = {
   Etui: "etui",
   Torebki: "torebki",
   "Paski do spodni": "paski",
-  Akcesoria: "akcesoria",
 };
 
 const SLUG_TO_CATEGORY = Object.fromEntries(

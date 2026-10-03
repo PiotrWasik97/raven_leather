@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import logo from "../assets/Raven_logo.png";
-import frontphoto1 from "../assets/BikerWallet - profil.jpg";
-import frontphoto2 from "../assets/Bifold - profil.jpg";
-import frontphoto3 from "../assets/Card Holder 1 - profil.jpg";
-import frontphoto4 from "../assets/Card Holder minimalist - profil.jpg";
-import frontphoto5 from "../assets/Passport - profil.jpg";
+import logo from "../assets/logo/raven-leather-poziome.svg";
+import { coverOf } from "../data/catalog.js";
+
+// Flagship photo of every product, in collection order.
+const images = [
+  { folder: "bikerwallet", alt: "Ręcznie robiony portfel Biker Wallet – Raven Leather" },
+  { folder: "bifold", alt: "Ręcznie robiony portfel Bifold – Raven Leather" },
+  { folder: "card-holder-1", alt: "Skórzane etui na karty Card Holder – Raven Leather" },
+  { folder: "card-holder-minimalist", alt: "Minimalistyczne etui na karty – Raven Leather" },
+  { folder: "paszport", alt: "Skórzane etui na paszport – Raven Leather" },
+  { folder: "torba-damska-model-1", alt: "Ręcznie szyta skórzana torba damska – Raven Leather" },
+  { folder: "pasek", alt: "Ręcznie robiony skórzany pasek do spodni – Raven Leather" },
+]
+  .map(({ folder, alt }) => ({ src: coverOf(folder)?.medium, alt }))
+  .filter((image) => image.src);
 
 export default function Hero() {
-  const images = [
-    { src: frontphoto1, alt: "Ręcznie robiony portfel Biker Wallet – Raven Leather" },
-    { src: frontphoto2, alt: "Ręcznie robiony portfel Bifold – Raven Leather" },
-    { src: frontphoto3, alt: "Skórzane etui na karty Card Holder – Raven Leather" },
-    { src: frontphoto4, alt: "Minimalistyczne etui na karty – Raven Leather" },
-    { src: frontphoto5, alt: "Skórzane etui na paszport – Raven Leather" },
-  ];
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -22,7 +24,7 @@ export default function Hero() {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
     }, 5000);
     return () => clearInterval(intervalId);
-  }, [images.length]);
+  }, []);
 
   return (
     <section className="relative grid grid-cols-1 lg:grid-cols-2 min-h-[calc(100vh-96px)] w-full bg-stone-50 overflow-hidden">
@@ -77,9 +79,12 @@ export default function Hero() {
                 index === currentIndex ? "opacity-100" : "opacity-0"
               }`}
             >
+              {/* lazy: the carousel is hidden on mobile, so its photos
+                  aren't downloaded there; on desktop they load right away */}
               <img
                 src={photo.src}
                 alt={photo.alt}
+                loading={index === 0 ? "eager" : "lazy"}
                 className="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700"
               />
             </div>
