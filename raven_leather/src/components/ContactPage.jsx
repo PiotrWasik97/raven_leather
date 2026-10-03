@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { IconWhatsApp, IconMessenger } from "./ContactIcons.jsx";
+import { WHATSAPP_URL, MESSENGER_URL } from "../utils/contactLinks.js";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -74,20 +76,38 @@ export default function ContactPage() {
               Adres
             </span>
             <span className="text-stone-800 font-serif text-lg">
-              ul. Króla Władysława Jagiełły 15
+              ul. Grunwaldzka 3
             </span>
             <span className="text-stone-600 font-light">42-500 Będzin</span>
           </div>
 
           <div className="flex flex-col">
             <span className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-1">
-              Telefon
+              WhatsApp
             </span>
             <a
-              href="tel:+48509109173"
-              className="text-stone-800 font-serif text-lg hover:text-stone-600 transition-colors"
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 text-stone-800 font-serif text-lg hover:text-stone-600 transition-colors"
             >
-              +48 509 109 173
+              <IconWhatsApp className="h-5 w-5 text-stone-500" />
+              Napisz do mnie na WhatsApp
+            </a>
+          </div>
+
+          <div className="flex flex-col">
+            <span className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-1">
+              Messenger
+            </span>
+            <a
+              href={MESSENGER_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 text-stone-800 font-serif text-lg hover:text-stone-600 transition-colors"
+            >
+              <IconMessenger className="h-5 w-5 text-stone-500" />
+              Napisz do mnie na Messenger
             </a>
           </div>
 

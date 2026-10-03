@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { categoryToSlug, slugToCategory } from "../utils/categorySlugs.js";
 import useSEO from "../hooks/useSEO.js";
 
+import bikerWalletProfil from "../assets/BikerWallet - profil.jpg";
 import biker1 from "../assets/biker-1.jpg";
 import biker2 from "../assets/biker-2.jpg";
 import biker3 from "../assets/biker-3.jpg";
@@ -123,17 +125,23 @@ const ChevronRight = () => (
 export default function Products() {
   const { kategoria } = useParams();
   const navigate = useNavigate();
-  const [lightboxIndex, setLightboxIndex] = useState(null);
+  // { images, index } of the product currently open in the lightbox, or null
+  const [lightbox, setLightbox] = useState(null);
   const scrollContainerRef = useRef(null);
+  const pointerDownRef = useRef(null);
 
+  // `cover` is the flagship photo shown full-width above the grid on mobile.
+  // Sections without one fall back to their first image.
   const productsData = {
     Portfele: [
       {
         title: "Biker",
+        cover: bikerWalletProfil,
         images: [biker1, biker2, biker3, biker4, biker5, biker6, biker7],
       },
       {
         title: "Bifold",
+        cover: bifoldProfil,
         images: [
           bifold,
           bifold1,
@@ -152,6 +160,7 @@ export default function Products() {
     Etui: [
       {
         title: "Cardholders",
+        cover: cardholder1Profil,
         images: [
           cardholder1,
           cardholder1_1,
@@ -167,6 +176,7 @@ export default function Products() {
       },
       {
         title: "Card Holders Minimalist",
+        cover: cardholderMinimalistProfil,
         images: [
           cardholderMinimalist,
           cardholderMinimalist1,
@@ -178,6 +188,7 @@ export default function Products() {
       },
       {
         title: "Passport",
+        cover: passportProfil,
         images: [passport, passport1, passport2, passport3, passport4, passportProfil],
       },
     ],
@@ -226,32 +237,43 @@ export default function Products() {
     path: `/kolekcja/${categoryToSlug(activeCategory)}`,
   });
 
-  const allImagesInCategory = productsData[activeCategory]
-    ? productsData[activeCategory].flatMap((section) => section.images)
-    : [];
+  const getCover = (section) => section.cover ?? section.images[0];
 
-  const openLightbox = (imgSrc) => {
-    const index = allImagesInCategory.indexOf(imgSrc);
+  // The lightbox walks through one product only, in the same order the
+  // visitor sees it: on mobile the flagship photo comes first, on desktop
+  // the grid order is kept as is.
+  const openLightbox = (section, imgSrc) => {
+    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+    const cover = getCover(section);
+    const images = isDesktop
+      ? section.images
+      : [cover, ...section.images.filter((img) => img !== cover)];
+    const index = images.indexOf(imgSrc);
     if (index !== -1) {
-      setLightboxIndex(index);
+      setLightbox({ images, index });
     }
   };
 
-  const closeLightbox = () => setLightboxIndex(null);
+  const closeLightbox = () => setLightbox(null);
 
   const nextImage = useCallback(() => {
-    setLightboxIndex((prev) => (prev + 1) % allImagesInCategory.length);
-  }, [allImagesInCategory.length]);
+    setLightbox((prev) => ({
+      ...prev,
+      index: (prev.index + 1) % prev.images.length,
+    }));
+  }, []);
 
   const prevImage = useCallback(() => {
-    setLightboxIndex(
-      (prev) =>
-        (prev - 1 + allImagesInCategory.length) % allImagesInCategory.length,
-    );
-  }, [allImagesInCategory.length]);
+    setLightbox((prev) => ({
+      ...prev,
+      index: (prev.index - 1 + prev.images.length) % prev.images.length,
+    }));
+  }, []);
+
+  const isLightboxOpen = lightbox !== null;
 
   useEffect(() => {
-    if (lightboxIndex === null) return;
+    if (!isLightboxOpen) return;
 
     const handleKeyDown = (e) => {
       if (e.key === "Escape") closeLightbox();
@@ -259,9 +281,29 @@ export default function Products() {
       if (e.key === "ArrowLeft") prevImage();
     };
 
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [lightboxIndex, nextImage, prevImage]);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isLightboxOpen, nextImage, prevImage]);
+
+  // A click on the dark area around the photo closes the lightbox, but not
+  // when it ends a drag (panning a zoomed photo).
+  const handleBackdropPointerDown = (e) => {
+    pointerDownRef.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const handleBackdropClick = (e) => {
+    if (e.target.tagName === "IMG") return;
+    const start = pointerDownRef.current;
+    if (start && Math.hypot(e.clientX - start.x, e.clientY - start.y) > 6) {
+      return;
+    }
+    closeLightbox();
+  };
 
   const getModelCountText = (category) => {
     if (!productsData[category]) return "";
@@ -285,7 +327,10 @@ export default function Products() {
   };
 
   return (
-    <section className="w-full bg-stone-50 h-[calc(100vh-80px)] flex flex-col md:flex-row overflow-hidden relative">
+    // Height = viewport minus the 6rem (96px) navbar, so the page itself never
+    // scrolls and the mobile category bar stays pinned right under the menu.
+    // dvh follows the mobile browser's collapsing address bar; vh is the fallback.
+    <section className="w-full bg-stone-50 h-[calc(100vh-6rem)] supports-[height:100dvh]:h-[calc(100dvh-6rem)] flex flex-col md:flex-row overflow-hidden relative">
       <div className="md:hidden w-full bg-white border-b border-stone-200 flex-shrink-0 z-20">
         <div className="flex overflow-x-auto py-4 px-4 gap-3 no-scrollbar">
           {categories.map((category) => (
@@ -329,7 +374,7 @@ export default function Products() {
 
       <main
         ref={scrollContainerRef}
-        className="flex-1 h-full bg-white md:bg-stone-50/50 p-0 md:p-12 lg:p-16 overflow-y-auto scroll-smooth"
+        className="flex-1 min-h-0 h-full bg-white md:bg-stone-50/50 p-0 md:p-12 lg:p-16 overflow-y-auto overscroll-y-contain scroll-smooth"
       >
         <div className="hidden md:flex mb-12 border-b border-stone-200 pb-6 flex-col md:flex-row md:items-end justify-between gap-2">
           <h2 className="text-3xl md:text-4xl font-serif text-stone-900">
@@ -342,7 +387,10 @@ export default function Products() {
 
         {productsData[activeCategory] &&
         productsData[activeCategory].length > 0 ? (
-          productsData[activeCategory].map((section, sectionIndex) => (
+          productsData[activeCategory].map((section, sectionIndex) => {
+            const cover = getCover(section);
+
+            return (
             <div key={sectionIndex} className="mb-0 md:mb-16 last:mb-0">
               {section.title && (
                 <div className="flex items-center justify-center py-4 md:mb-8 bg-stone-50 md:bg-transparent">
@@ -352,12 +400,29 @@ export default function Products() {
                 </div>
               )}
 
+              {/* Mobile: flagship photo full-width above the grid */}
+              <div className="md:hidden px-2 pb-1">
+                <div
+                  onClick={() => openLightbox(section, cover)}
+                  className="aspect-[4/3] w-full overflow-hidden bg-stone-100 cursor-pointer"
+                >
+                  <img
+                    src={cover}
+                    alt={`${activeCategory} ${section.title} – zdjęcie główne`}
+                    loading={sectionIndex === 0 ? "eager" : "lazy"}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+
               <div className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 md:gap-6 px-2">
                 {section.images.map((img, imgIndex) => (
                   <div
                     key={imgIndex}
-                    onClick={() => openLightbox(img)}
-                    className="group relative aspect-square overflow-hidden bg-stone-100 md:rounded-sm cursor-pointer shadow-none md:shadow-sm md:hover:shadow-md transition-all duration-300"
+                    onClick={() => openLightbox(section, img)}
+                    className={`group relative aspect-square overflow-hidden bg-stone-100 md:rounded-sm cursor-pointer shadow-none md:shadow-sm md:hover:shadow-md transition-all duration-300 ${
+                      img === cover ? "hidden md:block" : ""
+                    }`}
                   >
                     <img
                       src={img}
@@ -371,7 +436,8 @@ export default function Products() {
                 ))}
               </div>
             </div>
-          ))
+            );
+          })
         ) : (
           <div className="flex flex-col items-center justify-center h-64 text-stone-400 border border-dashed border-stone-200 rounded-sm mx-4 md:mx-0 mt-8">
             <p className="text-sm font-light">Kolekcja w przygotowaniu.</p>
@@ -379,49 +445,72 @@ export default function Products() {
         )}
       </main>
 
-      {lightboxIndex !== null && (
-        <div className="fixed inset-0 z-[100] bg-stone-950/95 backdrop-blur-sm flex items-center justify-center">
+      {lightbox && (
+        <div className="fixed inset-0 z-[100] bg-stone-950/95 backdrop-blur-sm">
+          {/* key: every photo starts un-zoomed */}
+          <TransformWrapper
+            key={lightbox.index}
+            minScale={1}
+            maxScale={6}
+            centerZoomedOut
+            // multiplied by the wheel delta: ~+0.5x per mouse-wheel notch
+            wheel={{ step: 0.005 }}
+            doubleClick={{ mode: "toggle" }}
+            panning={{ velocityDisabled: true }}
+          >
+            <TransformComponent
+              wrapperStyle={{ width: "100%", height: "100%" }}
+              contentStyle={{ width: "100%", height: "100%" }}
+            >
+              <div
+                className="w-full h-full p-4 md:p-12 flex items-center justify-center"
+                onPointerDown={handleBackdropPointerDown}
+                onClick={handleBackdropClick}
+              >
+                <img
+                  src={lightbox.images[lightbox.index]}
+                  alt={`${activeCategory} – zdjęcie ${lightbox.index + 1}`}
+                  draggable={false}
+                  className="max-h-full max-w-full object-contain shadow-2xl animate-fadeIn select-none"
+                />
+              </div>
+            </TransformComponent>
+          </TransformWrapper>
+
           <button
             onClick={closeLightbox}
+            aria-label="Zamknij"
             className="absolute top-4 right-4 md:top-8 md:right-8 text-stone-400 hover:text-white hover:bg-white/10 p-2 rounded-full transition-all z-50"
           >
             <CloseIcon />
           </button>
 
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              prevImage();
-            }}
-            className="absolute left-2 md:left-8 text-stone-500 hover:text-white p-2 md:p-4 hover:bg-white/5 rounded-full transition-all z-50"
+            onClick={prevImage}
+            aria-label="Poprzednie zdjęcie"
+            className="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 text-stone-500 hover:text-white p-2 md:p-4 hover:bg-white/5 rounded-full transition-all z-50"
           >
             <ChevronLeft />
           </button>
 
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              nextImage();
-            }}
-            className="absolute right-2 md:right-8 text-stone-500 hover:text-white p-2 md:p-4 hover:bg-white/5 rounded-full transition-all z-50"
+            onClick={nextImage}
+            aria-label="Następne zdjęcie"
+            className="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 text-stone-500 hover:text-white p-2 md:p-4 hover:bg-white/5 rounded-full transition-all z-50"
           >
             <ChevronRight />
           </button>
 
-          <div
-            className="relative w-full h-full p-4 md:p-12 flex items-center justify-center"
-            onClick={closeLightbox}
-          >
-            <img
-              src={allImagesInCategory[lightboxIndex]}
-              alt="Full screen"
-              className="max-h-full max-w-full object-contain shadow-2xl animate-fadeIn"
-              onClick={(e) => e.stopPropagation()}
-            />
-
-            <div className="absolute bottom-6 text-stone-500 text-xs tracking-[0.2em]">
-              {lightboxIndex + 1} / {allImagesInCategory.length}
-            </div>
+          <div className="absolute bottom-4 left-0 right-0 flex flex-col items-center gap-1 pointer-events-none">
+            <span className="text-stone-500 text-xs tracking-[0.2em]">
+              {lightbox.index + 1} / {lightbox.images.length}
+            </span>
+            <span className="text-stone-600 text-[10px] tracking-[0.15em] uppercase">
+              <span className="md:hidden">Rozsuń dwa palce, aby przybliżyć</span>
+              <span className="hidden md:inline">
+                Kółko myszy lub dwuklik, aby przybliżyć
+              </span>
+            </span>
           </div>
         </div>
       )}
