@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import logo from "../assets/logo/raven-leather-poziome.svg";
 import { coverOf } from "../data/catalog.js";
 
-// Flagship photo of every product, in collection order.
 const images = [
   { folder: "bikerwallet", alt: "Ręcznie robiony portfel Biker Wallet – Raven Leather" },
   { folder: "bifold", alt: "Ręcznie robiony portfel Bifold – Raven Leather" },
@@ -79,8 +78,6 @@ export default function Hero() {
                 index === currentIndex ? "opacity-100" : "opacity-0"
               }`}
             >
-              {/* lazy: the carousel is hidden on mobile, so its photos
-                  aren't downloaded there; on desktop they load right away */}
               <img
                 src={photo.src}
                 alt={photo.alt}

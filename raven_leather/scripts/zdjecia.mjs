@@ -1,16 +1,3 @@
-// Generuje zdjęcia dla strony z oryginałów w ../zdjecia-oryginaly
-// (folder poza repozytorium). Uruchom: npm run zdjecia
-//
-// Nazwy oryginałów:
-//   "<numer> <produkt>[ - profil|profilowe].jpg"  -> src/assets/produkty/<produkt>/<numer>-<rozmiar>.jpg
-//       np. "1 Bifold - profil.jpg", "2 Bifold.jpg". Zdjęcie z najniższym
-//       numerem jest flagowe. Wielkość liter w nazwie produktu nie ma znaczenia.
-//   "<nazwa>.jpg" (bez numeru)                  -> src/assets/strona/<nazwa>-<rozmiar>.jpg
-//       np. "Marcin.jpg"
-//
-// Wynikowe foldery są za każdym razem tworzone od nowa, więc usunięcie
-// oryginału usuwa też jego wersje na stronie.
-
 import sharp from "sharp";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -21,14 +8,12 @@ const SOURCE_DIR = path.resolve(here, "../../zdjecia-oryginaly");
 const PRODUCTS_DIR = path.resolve(here, "../src/assets/produkty");
 const PAGE_DIR = path.resolve(here, "../src/assets/strona");
 
-// 800: miniatury w siatce, 1600: duże zdjęcia na stronie, 2560: podgląd z przybliżaniem
 const SIZES = [
   { name: "800", maxEdge: 800, quality: 80 },
   { name: "1600", maxEdge: 1600, quality: 82 },
   { name: "2560", maxEdge: 2560, quality: 85 },
 ];
 
-// "11 2 Torba damska model 1.jpg" -> numer 11, produkt "Torba damska model 1"
 const PRODUCT_FILE =
   /^(\d+)(?:\s+\d+)?\s+(.+?)(?:\s*-\s*profil(?:owe)?)?\.jpe?g$/i;
 const PAGE_FILE = /^(.+?)\.jpe?g$/i;
@@ -45,7 +30,7 @@ function slugify(text) {
 }
 
 async function writeSizes(sourcePath, outBase) {
-  const image = sharp(sourcePath).rotate(); // obrót wg EXIF, potem metadane (np. GPS) są usuwane
+  const image = sharp(sourcePath).rotate();
   let bytes = 0;
   for (const size of SIZES) {
     const info = await image
@@ -72,7 +57,7 @@ async function main() {
     process.exit(1);
   }
 
-  const products = new Map(); // slug -> { name, files: Map<numer, plik> }
+  const products = new Map();
   const pageFiles = [];
   const skipped = [];
 

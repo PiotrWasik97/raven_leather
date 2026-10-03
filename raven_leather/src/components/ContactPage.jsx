@@ -96,7 +96,7 @@ export default function ContactPage() {
             </a>
           </div>
 
-          {/* Messenger wyłączony - patrz komentarz w Kontakt.jsx
+          {/*
           <div className="flex flex-col">
             <span className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-1">
               Messenger

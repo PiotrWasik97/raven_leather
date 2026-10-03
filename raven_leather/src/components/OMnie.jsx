@@ -2,8 +2,6 @@ import React from "react";
 import workshopPhoto800 from "../assets/strona/marcin-800.jpg";
 import workshopPhoto1600 from "../assets/strona/marcin-1600.jpg";
 
-// "Rzemieślnik & Pasjonat / Nazywam się Marcin Wasik" - on mobile it sits on
-// the photo (light), on desktop above the text (dark).
 function Intro({ onPhoto }) {
   return (
     <>
@@ -33,12 +31,7 @@ function Intro({ onPhoto }) {
 
 export default function OMnie() {
   return (
-    // Desktop: photo + text side by side, filling the screen below the 6rem
-    // navbar. Mobile: photo on top, text below, normal page scroll.
     <section className="w-full bg-stone-50 md:flex md:flex-row md:overflow-hidden md:h-[calc(100vh-6rem)] md:supports-[height:100dvh]:h-[calc(100dvh-6rem)]">
-      {/* On desktop the column takes the photo's 3:4 shape, so the whole
-          frame (head to workbench) stays visible. To show it uncropped with
-          side margins instead, switch the img to object-contain. */}
       <div className="relative w-full aspect-[3/4] max-h-[calc(100svh-6rem)] overflow-hidden md:h-full md:w-auto md:max-h-none md:max-w-[50%] md:flex-shrink-0">
         <img
           src={workshopPhoto1600}

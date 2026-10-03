@@ -55,9 +55,6 @@ const ChevronRight = () => (
   </svg>
 );
 
-// Shows the 1600px version straight away and swaps in the sharper 2560px one
-// (for zooming into details) once it has downloaded. Both render at the same
-// on-screen size, so the swap is invisible apart from the added sharpness.
 function LightboxImage({ photo, alt, onLoad }) {
   const [largeReady, setLargeReady] = useState(false);
 
@@ -84,10 +81,7 @@ function LightboxImage({ photo, alt, onLoad }) {
 export default function Products() {
   const { kategoria } = useParams();
   const navigate = useNavigate();
-  // { photos, index } of the product currently open in the lightbox, or null
   const [lightbox, setLightbox] = useState(null);
-  // Bottom edge (px from the top of the screen) of the un-zoomed photo in the
-  // lightbox - the "1 / 8" counter sits just below it.
   const [photoBottom, setPhotoBottom] = useState(null);
   const lightboxImgRef = useRef(null);
   const zoomScaleRef = useRef(1);
@@ -118,8 +112,6 @@ export default function Products() {
     }
   }, [activeCategory]);
 
-  // Mobile: the category chips don't all fit on screen - keep the active one
-  // centered in the horizontally scrolling bar so it's never cut off.
   useEffect(() => {
     const bar = categoryBarRef.current;
     const chip = bar?.querySelector('[aria-current="page"]');
@@ -129,7 +121,6 @@ export default function Products() {
     bar.scrollBy({
       left:
         chipRect.left + chipRect.width / 2 - (barRect.left + barRect.width / 2),
-      // jump straight there on page load, glide when the visitor switches
       behavior: categoryBarPositionedRef.current ? "smooth" : "instant",
     });
     categoryBarPositionedRef.current = true;
@@ -141,8 +132,6 @@ export default function Products() {
     path: `/kolekcja/${categoryToSlug(activeCategory)}`,
   });
 
-  // The lightbox walks through one product only. Photo no. 1 (the flagship)
-  // comes first both on mobile (above the grid) and on desktop (first tile).
   const openLightbox = (section, photo) => {
     const index = section.photos.indexOf(photo);
     if (index !== -1) {
@@ -156,7 +145,6 @@ export default function Products() {
     setPhotoBottom(null);
   };
 
-  // Every photo opens un-zoomed (TransformWrapper is keyed by index).
   const nextImage = useCallback(() => {
     zoomScaleRef.current = 1;
     setLightbox((prev) => ({
@@ -173,7 +161,6 @@ export default function Products() {
     }));
   }, []);
 
-  // Only measured while un-zoomed: a zoomed photo's box isn't its resting size.
   const measurePhoto = useCallback((img) => {
     lightboxImgRef.current = img;
     if (zoomScaleRef.current > 1.01) return;
@@ -191,7 +178,6 @@ export default function Products() {
       if (e.key === "ArrowLeft") prevImage();
     };
 
-    // e.g. rotating the phone moves the photo, so the counter follows it
     const handleResize = () => {
       if (lightboxImgRef.current) measurePhoto(lightboxImgRef.current);
     };
@@ -207,8 +193,6 @@ export default function Products() {
     };
   }, [isLightboxOpen, nextImage, prevImage, measurePhoto]);
 
-  // A click on the dark area around the photo closes the lightbox, but not
-  // when it ends a drag (panning a zoomed photo).
   const handleBackdropPointerDown = (e) => {
     pointerDownRef.current = { x: e.clientX, y: e.clientY };
   };
@@ -244,9 +228,6 @@ export default function Products() {
   };
 
   return (
-    // Height = viewport minus the 6rem (96px) navbar, so the page itself never
-    // scrolls and the mobile category bar stays pinned right under the menu.
-    // dvh follows the mobile browser's collapsing address bar; vh is the fallback.
     <section className="w-full bg-stone-50 h-[calc(100vh-6rem)] supports-[height:100dvh]:h-[calc(100dvh-6rem)] flex flex-col md:flex-row overflow-hidden relative">
       <div className="md:hidden w-full bg-white border-b border-stone-200 flex-shrink-0 z-20">
         <div
@@ -279,7 +260,9 @@ export default function Products() {
             {categories.map((category) => (
               <button
                 key={category}
-                onClick={() => navigate(`/kolekcja/${categoryToSlug(category)}`)}
+                onClick={() =>
+                  navigate(`/kolekcja/${categoryToSlug(category)}`)
+                }
                 className={`text-left text-base py-3 px-4 transition-all duration-300 border-l-2 ${
                   activeCategory === category
                     ? "border-stone-900 text-stone-900 font-bold bg-white shadow-sm pl-6"
@@ -312,53 +295,52 @@ export default function Products() {
             const cover = section.photos[0];
 
             return (
-            <div key={sectionIndex} className="mb-0 md:mb-16 last:mb-0">
-              {section.title && (
-                <div className="flex items-center justify-center py-4 md:mb-8 bg-stone-50 md:bg-transparent">
-                  <h3 className="text-sm md:text-xl font-serif text-stone-800 italic">
-                    — {section.title} —
-                  </h3>
-                </div>
-              )}
+              <div key={sectionIndex} className="mb-0 md:mb-16 last:mb-0">
+                {section.title && (
+                  <div className="flex items-center justify-center py-4 md:mb-8 bg-stone-50 md:bg-transparent">
+                    <h3 className="text-sm md:text-xl font-serif text-stone-800 italic">
+                      — {section.title} —
+                    </h3>
+                  </div>
+                )}
 
-              {/* Mobile: flagship photo full-width above the grid */}
-              <div className="md:hidden px-2 pb-1">
-                <div
-                  onClick={() => openLightbox(section, cover)}
-                  className="aspect-[4/3] w-full overflow-hidden bg-stone-100 cursor-pointer"
-                >
-                  <img
-                    src={cover.medium}
-                    srcSet={`${cover.thumb} 800w, ${cover.medium} 1600w`}
-                    sizes="100vw"
-                    alt={`${activeCategory} ${section.title} – zdjęcie główne`}
-                    loading={sectionIndex === 0 ? "eager" : "lazy"}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 md:gap-6 px-2">
-                {section.photos.map((photo, photoIndex) => (
+                <div className="md:hidden px-2 pb-1">
                   <div
-                    key={photoIndex}
-                    onClick={() => openLightbox(section, photo)}
-                    className={`group relative aspect-square overflow-hidden bg-stone-100 md:rounded-sm cursor-pointer shadow-none md:shadow-sm md:hover:shadow-md transition-all duration-300 ${
-                      photo === cover ? "hidden md:block" : ""
-                    }`}
+                    onClick={() => openLightbox(section, cover)}
+                    className="aspect-[4/3] w-full overflow-hidden bg-stone-100 cursor-pointer"
                   >
                     <img
-                      src={photo.thumb}
-                      alt={`${activeCategory} ${section.title} ${photoIndex + 1}`}
-                      loading="lazy"
-                      className="w-full h-full object-cover transition-transform duration-700 md:group-hover:scale-105"
+                      src={cover.medium}
+                      srcSet={`${cover.thumb} 800w, ${cover.medium} 1600w`}
+                      sizes="100vw"
+                      alt={`${activeCategory} ${section.title} – zdjęcie główne`}
+                      loading={sectionIndex === 0 ? "eager" : "lazy"}
+                      className="w-full h-full object-cover"
                     />
-
-                    <div className="hidden md:flex absolute inset-0 bg-stone-900/0 group-hover:bg-stone-900/10 transition-colors duration-300 items-center justify-center"></div>
                   </div>
-                ))}
+                </div>
+
+                <div className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 md:gap-6 px-2">
+                  {section.photos.map((photo, photoIndex) => (
+                    <div
+                      key={photoIndex}
+                      onClick={() => openLightbox(section, photo)}
+                      className={`group relative aspect-square overflow-hidden bg-stone-100 md:rounded-sm cursor-pointer shadow-none md:shadow-sm md:hover:shadow-md transition-all duration-300 ${
+                        photo === cover ? "hidden md:block" : ""
+                      }`}
+                    >
+                      <img
+                        src={photo.thumb}
+                        alt={`${activeCategory} ${section.title} ${photoIndex + 1}`}
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-700 md:group-hover:scale-105"
+                      />
+
+                      <div className="hidden md:flex absolute inset-0 bg-stone-900/0 group-hover:bg-stone-900/10 transition-colors duration-300 items-center justify-center"></div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
             );
           })
         ) : (
@@ -370,13 +352,11 @@ export default function Products() {
 
       {lightbox && (
         <div className="fixed inset-0 z-[100] bg-stone-950/95 backdrop-blur-sm">
-          {/* key: every photo starts un-zoomed */}
           <TransformWrapper
             key={lightbox.index}
             minScale={1}
             maxScale={6}
             centerZoomedOut
-            // multiplied by the wheel delta: ~+0.5x per mouse-wheel notch
             wheel={{ step: 0.005 }}
             doubleClick={{ mode: "toggle" }}
             panning={{ velocityDisabled: true }}
@@ -389,7 +369,6 @@ export default function Products() {
               contentStyle={{ width: "100%", height: "100%" }}
             >
               <div
-                // extra bottom padding leaves room for the counter under the photo
                 className="w-full h-full p-4 pb-16 md:p-12 md:pb-20 flex items-center justify-center"
                 onPointerDown={handleBackdropPointerDown}
                 onClick={handleBackdropClick}
@@ -429,7 +408,6 @@ export default function Products() {
 
           {photoBottom !== null && (
             <div
-              // shadow keeps it legible when a zoomed-in photo slides under it
               className="absolute left-0 right-0 mt-5 text-center text-stone-400 text-sm tracking-[0.2em] tabular-nums pointer-events-none [text-shadow:0_1px_3px_rgb(0_0_0/0.9)]"
               style={{ top: photoBottom }}
             >

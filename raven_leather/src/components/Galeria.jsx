@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { coverOf } from '../data/catalog.js';
 import { categoryToSlug } from '../utils/categorySlugs.js';
 
-// 2x2: every tile spans 2 of the 4 columns and 2 rows
 const categories = [
     { id: 1, photo: coverOf("bikerwallet"), title: "Portfele", keyName: "Portfele", span: "md:col-span-2 md:row-span-2" },
     { id: 4, photo: coverOf("card-holder-1"), title: "Cardholders", keyName: "Etui", span: "md:col-span-2 md:row-span-2" },

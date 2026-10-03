@@ -99,10 +99,7 @@ export default function Kontakt() {
                 </a>
               </li>
 
-              {/* Messenger wyłączony: m.me otwiera rozmowę tylko ze Stroną na
-                  Facebooku, nie z profilem prywatnym. Po założeniu Strony
-                  podmień MESSENGER_URL w utils/contactLinks.js i odkomentuj
-                  ten blok oraz importy IconMessenger / MESSENGER_URL u góry.
+              {/*
               <li className="flex items-center gap-4 group">
                 <span className="p-2 bg-stone-800 rounded-full text-stone-300 group-hover:text-white group-hover:bg-stone-700 transition-all duration-300">
                   <IconMessenger />
