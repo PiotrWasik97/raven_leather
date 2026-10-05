@@ -8,6 +8,7 @@ import Kontakt from "./components/Kontakt.jsx";
 import Products from "./components/Products.jsx";
 import OMnie from "./components/OMnie.jsx";
 import ContactPage from "./components/ContactPage.jsx";
+import PolitykaPrywatnosci from "./components/PolitykaPrywatnosci.jsx";
 import useSEO from "./hooks/useSEO.js";
 
 function HomePage() {
@@ -63,6 +64,17 @@ function ContactRoutePage() {
   );
 }
 
+function PrivacyPolicyPage() {
+  useSEO({
+    title: "Polityka prywatności",
+    description:
+      "Polityka prywatności Raven Leather – jakie dane zbieram przez stronę, w jakim celu i jakie prawa Ci przysługują.",
+    path: "/polityka-prywatnosci",
+  });
+
+  return <PolitykaPrywatnosci />;
+}
+
 function ScrollToTop() {
   const { pathname } = useLocation();
 
@@ -85,6 +97,7 @@ function App() {
         <Route path="/kolekcja/:kategoria" element={<Products />} />
         <Route path="/o-mnie" element={<AboutPage />} />
         <Route path="/kontakt" element={<ContactRoutePage />} />
+        <Route path="/polityka-prywatnosci" element={<PrivacyPolicyPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { IconWhatsApp /*, IconMessenger */ } from "./ContactIcons.jsx";
 import { WHATSAPP_URL /*, MESSENGER_URL */ } from "../utils/contactLinks.js";
 
@@ -122,8 +123,16 @@ export default function Kontakt() {
           <p>
             &copy; {new Date().getFullYear()} Raven Leather. Handmade in Poland.
           </p>
-          <div className="mt-4 md:mt-0 opacity-60 hover:opacity-100 hover:text-stone-300 transition-all">
-            Design by Raven Leather
+          <div className="mt-4 md:mt-0 flex flex-col md:flex-row items-center gap-4 md:gap-8">
+            <Link
+              to="/polityka-prywatnosci"
+              className="hover:text-stone-300 transition-colors"
+            >
+              Polityka prywatności
+            </Link>
+            <div className="opacity-60 hover:opacity-100 hover:text-stone-300 transition-all">
+              Design by Raven Leather
+            </div>
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { IconWhatsApp /*, IconMessenger */ } from "./ContactIcons.jsx";
 import { WHATSAPP_URL /*, MESSENGER_URL */ } from "../utils/contactLinks.js";
 
@@ -237,6 +238,19 @@ export default function ContactPage() {
                 Coś poszło nie tak. Spróbuj ponownie.
               </p>
             )}
+
+            <p className="text-stone-400 text-xs leading-relaxed">
+              Administratorem Twoich danych jest Marcin Wasik. Dane z formularza
+              wykorzystam wyłącznie, aby odpowiedzieć na Twoją wiadomość.
+              Szczegóły znajdziesz w{" "}
+              <Link
+                to="/polityka-prywatnosci"
+                className="underline underline-offset-2 hover:text-stone-700 transition-colors"
+              >
+                polityce prywatności
+              </Link>
+              .
+            </p>
           </form>
         )}
       </div>
