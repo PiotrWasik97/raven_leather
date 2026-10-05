@@ -4,13 +4,28 @@ import logo from "../assets/logo/raven-leather-poziome.svg";
 import { coverOf } from "../data/catalog.js";
 
 const images = [
-  { folder: "bikerwallet", alt: "Ręcznie robiony portfel Biker Wallet – Raven Leather" },
+  {
+    folder: "bikerwallet",
+    alt: "Ręcznie robiony portfel Biker Wallet – Raven Leather",
+  },
   { folder: "bifold", alt: "Ręcznie robiony portfel Bifold – Raven Leather" },
-  { folder: "card-holder-1", alt: "Skórzane etui na karty Card Holder – Raven Leather" },
-  { folder: "card-holder-minimalist", alt: "Minimalistyczne etui na karty – Raven Leather" },
+  {
+    folder: "card-holder-1",
+    alt: "Skórzane etui na karty Card Holder – Raven Leather",
+  },
+  {
+    folder: "card-holder-minimalist",
+    alt: "Minimalistyczne etui na karty – Raven Leather",
+  },
   { folder: "paszport", alt: "Skórzane etui na paszport – Raven Leather" },
-  { folder: "torba-damska-model-1", alt: "Ręcznie szyta skórzana torba damska – Raven Leather" },
-  { folder: "pasek", alt: "Ręcznie robiony skórzany pasek do spodni – Raven Leather" },
+  {
+    folder: "torba-damska-model-1",
+    alt: "Ręcznie szyta skórzana torba damska – Raven Leather",
+  },
+  {
+    folder: "pasek",
+    alt: "Ręcznie robiony skórzany pasek do spodni – Raven Leather",
+  },
 ]
   .map(({ folder, alt }) => ({ src: coverOf(folder)?.medium, alt }))
   .filter((image) => image.src);

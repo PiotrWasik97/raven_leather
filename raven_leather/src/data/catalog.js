@@ -24,7 +24,11 @@ function photosOf(folder) {
     }));
 }
 
-const product = (title, folder) => ({ title, folder, photos: photosOf(folder) });
+const product = (title, folder) => ({
+  title,
+  folder,
+  photos: photosOf(folder),
+});
 
 const CATALOG = {
   Portfele: [product("Biker", "bikerwallet"), product("Bifold", "bifold")],
@@ -33,8 +37,8 @@ const CATALOG = {
     product("Card Holders Minimalist", "card-holder-minimalist"),
     product("Paszport", "paszport"),
   ],
-  Torebki: [product("Torba damska model 1", "torba-damska-model-1")],
-  "Paski do spodni": [product("Pasek", "pasek")],
+  Torebki: [product("Torba damska", "torba-damska-model-1")],
+  "Paski do spodni": [product("Paski", "pasek")],
 };
 
 export const PRODUCTS_BY_CATEGORY = Object.fromEntries(
