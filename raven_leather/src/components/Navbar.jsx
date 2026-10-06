@@ -55,6 +55,12 @@ export default function Navbar() {
               O Mnie
             </Link>
             <Link
+              to="/jak-zamowic"
+              className="text-stone-600 hover:text-stone-900 text-xs font-bold uppercase tracking-[0.2em] transition-colors cursor-pointer"
+            >
+              Jak zamówić
+            </Link>
+            <Link
               to="/kontakt"
               className="px-6 py-3 bg-stone-900 text-white text-xs font-bold uppercase tracking-[0.2em] hover:bg-stone-700 transition-colors cursor-pointer rounded-sm shadow-md"
             >
@@ -120,6 +126,13 @@ export default function Navbar() {
                     className="text-2xl font-serif text-stone-900 hover:text-stone-600 text-left transition-colors"
                 >
                     O Mnie
+                </Link>
+                <Link
+                    to="/jak-zamowic"
+                    onClick={closeMobileMenu}
+                    className="text-2xl font-serif text-stone-900 hover:text-stone-600 text-left transition-colors"
+                >
+                    Jak zamówić
                 </Link>
                 <Link
                     to="/kontakt"

@@ -297,10 +297,15 @@ export default function Products() {
             return (
               <div key={sectionIndex} className="mb-0 md:mb-16 last:mb-0">
                 {section.title && (
-                  <div className="flex items-center justify-center py-4 md:mb-8 bg-stone-50 md:bg-transparent">
+                  <div className="flex flex-col items-center justify-center gap-1 py-4 md:mb-8 bg-stone-50 md:bg-transparent">
                     <h3 className="text-sm md:text-xl font-serif text-stone-800 italic">
                       — {section.title} —
                     </h3>
+                    {section.price && (
+                      <p className="text-stone-500 text-xs md:text-sm font-light tracking-wide">
+                        cena {section.price}
+                      </p>
+                    )}
                   </div>
                 )}
 

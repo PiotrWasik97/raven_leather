@@ -6,21 +6,21 @@ import { coverOf } from "../data/catalog.js";
 const images = [
   {
     folder: "bikerwallet",
-    alt: "Ręcznie robiony portfel Biker Wallet – Raven Leather",
+    alt: "Ręcznie robiony portfel Biker Wallet Draupnir – Raven Leather",
   },
-  { folder: "bifold", alt: "Ręcznie robiony portfel Bifold – Raven Leather" },
+  { folder: "bifold", alt: "Ręcznie robiony portfel Bifold Bifrost – Raven Leather" },
   {
     folder: "card-holder-1",
-    alt: "Skórzane etui na karty Card Holder – Raven Leather",
+    alt: "Skórzane etui na karty Huginn – Raven Leather",
   },
   {
     folder: "card-holder-minimalist",
-    alt: "Minimalistyczne etui na karty – Raven Leather",
+    alt: "Minimalistyczne etui na karty Ingwaz – Raven Leather",
   },
-  { folder: "paszport", alt: "Skórzane etui na paszport – Raven Leather" },
+  { folder: "paszport", alt: "Skórzane etui na paszport Ratatosk – Raven Leather" },
   {
     folder: "torba-damska-model-1",
-    alt: "Ręcznie szyta skórzana torba damska – Raven Leather",
+    alt: "Ręcznie szyta skórzana torba damska Skidbladnir – Raven Leather",
   },
   {
     folder: "pasek",

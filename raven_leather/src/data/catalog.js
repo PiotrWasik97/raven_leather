@@ -24,21 +24,27 @@ function photosOf(folder) {
     }));
 }
 
-const product = (title, folder) => ({
+const product = (title, folder, price) => ({
   title,
   folder,
+  price,
   photos: photosOf(folder),
 });
 
 const CATALOG = {
-  Portfele: [product("Biker", "bikerwallet"), product("Bifold", "bifold")],
-  Etui: [
-    product("Cardholders", "card-holder-1"),
-    product("Card Holders Minimalist", "card-holder-minimalist"),
-    product("Paszport", "paszport"),
+  Portfele: [
+    product("Biker Wallet – Draupnir", "bikerwallet", "od 950 zł"),
+    product("Bifold – Bifrost", "bifold", "od 620 zł"),
   ],
-  Torebki: [product("Torba damska", "torba-damska-model-1")],
-  "Paski do spodni": [product("Paski", "pasek")],
+  Etui: [
+    product("Huginn", "card-holder-1", "od 270 zł"),
+    product("Ingwaz", "card-holder-minimalist", "od 90 zł"),
+    product("Paszport – Ratatosk", "paszport", "od 380 zł"),
+  ],
+  Torebki: [
+    product("Torba damska – Skidbladnir", "torba-damska-model-1", "870–1990 zł"),
+  ],
+  "Paski do spodni": [product("Paski", "pasek", "od 190 zł")],
 };
 
 export const PRODUCTS_BY_CATEGORY = Object.fromEntries(

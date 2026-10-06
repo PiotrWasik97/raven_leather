@@ -9,6 +9,7 @@ import Products from "./components/Products.jsx";
 import OMnie from "./components/OMnie.jsx";
 import ContactPage from "./components/ContactPage.jsx";
 import PolitykaPrywatnosci from "./components/PolitykaPrywatnosci.jsx";
+import JakZamowic from "./components/JakZamowic.jsx";
 import useSEO from "./hooks/useSEO.js";
 
 function HomePage() {
@@ -64,6 +65,17 @@ function ContactRoutePage() {
   );
 }
 
+function HowToOrderPage() {
+  useSEO({
+    title: "Jak zamówić",
+    description:
+      "Jak zamówić ręcznie robiony produkt Raven Leather – wybór modelu, kontakt, ustalenie szczegółów, wycena i zadatek w 5 prostych krokach.",
+    path: "/jak-zamowic",
+  });
+
+  return <JakZamowic />;
+}
+
 function PrivacyPolicyPage() {
   useSEO({
     title: "Polityka prywatności",
@@ -96,6 +108,7 @@ function App() {
         <Route path="/kolekcja" element={<Products />} />
         <Route path="/kolekcja/:kategoria" element={<Products />} />
         <Route path="/o-mnie" element={<AboutPage />} />
+        <Route path="/jak-zamowic" element={<HowToOrderPage />} />
         <Route path="/kontakt" element={<ContactRoutePage />} />
         <Route path="/polityka-prywatnosci" element={<PrivacyPolicyPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
